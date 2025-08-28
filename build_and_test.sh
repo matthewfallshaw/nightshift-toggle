@@ -11,24 +11,24 @@ else
   echo "         Display settings may not actually change in this mode."
 fi
 
-# Create build directory if it doesn't exist
-mkdir -p build
+# Create test build directory if it doesn't exist
+mkdir -p build/tests
 
-echo "Building nightshift-toggle..."
+echo "Building nightshift-toggle for testing..."
 if ! swiftc -import-objc-header CoreBrightness-Bridging-Header.h \
   -F /System/Library/PrivateFrameworks \
   -framework CoreBrightness \
-  -o build/nightshift-toggle NightShiftToggle.swift; then
+  -o build/tests/nightshift-toggle NightShiftToggle.swift; then
     echo "Compilation failed!"
     exit 1
 fi
 
 echo "Making executable..."
-chmod +x build/nightshift-toggle
+chmod +x build/tests/nightshift-toggle
 
 # Function to check if Night Shift is enabled
 get_status() {
-    STATUS_OUTPUT=$(build/nightshift-toggle status)
+    STATUS_OUTPUT=$(build/tests/nightshift-toggle status)
     if echo "$STATUS_OUTPUT" | grep -q "Night Shift is currently ON"; then
         echo "ON"
     elif echo "$STATUS_OUTPUT" | grep -q "Night Shift is currently OFF"; then
@@ -43,7 +43,7 @@ echo
 
 echo "TEST 1: Current status check"
 echo "Checking current Night Shift status..."
-build/nightshift-toggle status
+build/tests/nightshift-toggle status
 CURRENT_STATUS=$(get_status)
 echo "→ Current status detected as: $CURRENT_STATUS"
 echo "Test complete!"
@@ -57,7 +57,7 @@ if [ "$INTERACTIVE" = true ]; then
 else
     echo "Auto-continuing (non-interactive mode)..."
 fi
-build/nightshift-toggle
+build/tests/nightshift-toggle
 NEW_STATUS=$(get_status)
 echo "→ New status is: $NEW_STATUS"
 if [ "$CURRENT_STATUS" == "ON" ] && [ "$NEW_STATUS" == "OFF" ]; then
@@ -77,7 +77,7 @@ if [ "$INTERACTIVE" = true ]; then
 else
     echo "Auto-continuing (non-interactive mode)..."
 fi
-build/nightshift-toggle off
+build/tests/nightshift-toggle off
 OFF_STATUS=$(get_status)
 echo "→ Status after 'off' command: $OFF_STATUS"
 if [ "$OFF_STATUS" == "OFF" ]; then
@@ -96,7 +96,7 @@ if [ "$INTERACTIVE" = true ]; then
 else
     echo "Auto-continuing (non-interactive mode)..."
 fi
-build/nightshift-toggle off
+build/tests/nightshift-toggle off
 OFF_OFF_STATUS=$(get_status)
 echo "→ Status after second 'off' command: $OFF_OFF_STATUS"
 if [ "$OFF_OFF_STATUS" == "OFF" ]; then
@@ -114,7 +114,7 @@ if [ "$INTERACTIVE" = true ]; then
 else
     echo "Auto-continuing (non-interactive mode)..."
 fi
-build/nightshift-toggle on
+build/tests/nightshift-toggle on
 ON_STATUS=$(get_status)
 echo "→ Status after 'on' command: $ON_STATUS"
 if [ "$ON_STATUS" == "ON" ]; then
@@ -133,7 +133,7 @@ if [ "$INTERACTIVE" = true ]; then
 else
     echo "Auto-continuing (non-interactive mode)..."
 fi
-build/nightshift-toggle on
+build/tests/nightshift-toggle on
 ON_ON_STATUS=$(get_status)
 echo "→ Status after second 'on' command: $ON_ON_STATUS"
 if [ "$ON_ON_STATUS" == "ON" ]; then
@@ -152,7 +152,7 @@ if [ "$INTERACTIVE" = true ]; then
 else
     echo "Auto-continuing (non-interactive mode)..."
 fi
-build/nightshift-toggle
+build/tests/nightshift-toggle
 FINAL_STATUS=$(get_status)
 echo "→ Final status: $FINAL_STATUS"
 if [ "$FINAL_STATUS" == "OFF" ]; then
@@ -175,9 +175,9 @@ if [ "$CURRENT_STATUS" != "$FINAL_STATUS" ]; then
         echo "Auto-continuing (non-interactive mode)..."
     fi
     if [ "$CURRENT_STATUS" == "ON" ]; then
-        build/nightshift-toggle on
+        build/tests/nightshift-toggle on
     else
-        build/nightshift-toggle off
+        build/tests/nightshift-toggle off
     fi
     RESTORED_STATUS=$(get_status)
     echo "→ Status after restoration: $RESTORED_STATUS"

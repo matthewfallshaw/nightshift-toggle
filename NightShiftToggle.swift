@@ -60,7 +60,7 @@ func toggleNightShift() -> Bool {
     let newState = !currentState
     client.setNightShiftEnabled(newState)
 
-    print("Night Shift is now \(newState ? "ON" : "OFF")")
+    // No output on success - following Unix philosophy
     return true
 }
 
@@ -76,14 +76,14 @@ func setNightShift(enabled: Bool) -> Bool {
 
     // Check if already in requested state
     if currentState == enabled {
-        print("Night Shift is already \(enabled ? "ON" : "OFF")")
+        // No output when already in requested state - following Unix philosophy
         return true
     }
 
     // Set Night Shift state
     client.setNightShiftEnabled(enabled)
 
-    print("Night Shift is now \(enabled ? "ON" : "OFF")")
+    // No output on success - following Unix philosophy
     return true
 }
 
